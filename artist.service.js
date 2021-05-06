@@ -1,17 +1,13 @@
-import got from "got";
+import axios from "axios";
 
- export const getArtist = async(artistId, token) => {
+ export const getArtist = async(artistId) => {
+
+  console.log(artistId);
+
   try {
-    const response = await got(`https://api.spotify.com/v1/artists/${artistId}/related-artists`, {
-      responseType: 'json',
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const response = await axios.get(`https://api.spotify.com/v1/artists/${artistId}/related-artists`);
 
-    return response.body.artists
+    return response.data.artists
       .filter(({ popularity }) => popularity > 50)
       .map(({ name, id }) => ({ name, id }));
 

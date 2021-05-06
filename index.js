@@ -1,39 +1,61 @@
-import got from 'got';
 import fs from 'fs';
 
 import auth from './auth.service.js';
 import { getArtist } from './artist.service.js';
-
-/*
-vertx
-~id, name:String, age:Int, lang:String, ~label
-v1, "marko", 29, , person
-v2, "lop", , "java", software
-
-edges
-~id, ~from, ~to, ~label, weight:Double
-e1, v1, v2, created, 0.4
-*/
-
-const seedId = "0OdUWJ0sBjDrqHygGUXeCF";
+import axios from 'axios';
 
 try {
+  let count = 0;
+  const crawled = new Set();
+  const written = new Set();
+
   const token = await auth();
-  const artists = await getArtist(seedId, token);
-  console.log(artists)
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  axios.defaults.headers.common['Accept'] = "application/json";
+  axios.defaults.headers.common['Content-Type'] = "application/json";
+
+  const seedId = "0OdUWJ0sBjDrqHygGUXeCF";
+  const vertices = fs.createWriteStream('./output/vertices.csv', { encoding: 'utf8' });
+  const edges = fs.createWriteStream('./output/edges.csv', { encoding: 'utf8' });
+
+  vertices.write(`~id, name:String, popularity:Number, ~label\n`);
+  edges.write(`~id, ~from, ~to, ~label\n`);
+  
+  const recursion = async(id) => {    
+    count++;
+    crawled.add(id);
+
+    try {
+      const artists = await getArtist(id, token);
+      console.log('\ncount: ', count);
+      artists
+        .filter(a => !written.has(a.id))
+        .forEach(a => {
+          written.add(a.id);
+          vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
+          edges.write(`${id}, "${a.id}", related\n`);
+        });
+        
+      if(count === 10) {
+        vertices.end();
+        edges.end();
+        return;
+      }
+    
+      const { id: nextId } = artists.find(({ id }) => !crawled.has(id));
+
+      if(!nextId) {
+        return console.log('💥 no next id!');
+      }
+
+      recursion(nextId);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  recursion(seedId);
 } catch(e) {
   console.error(e);
-
 }
-
-
-//   // const stream = fs.createWriteStream("./artists.txt");
-// const data = { [seedId]: { crawled: true }};
-// try {
-//   await getArtist(seedId, data);
-// } catch(e) {
-//   console.log('💥');
-//   fs.writeFileSync('artists.json', JSON.stringify(data));
-// }
-
-
