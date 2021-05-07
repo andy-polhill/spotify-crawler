@@ -1,7 +1,7 @@
 import axios from 'axios';
 import querystring from 'querystring';
 
-export default async function() {
+export const getToken = async() => {
 
   const encodedToken = Buffer
     .from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`)

@@ -1,6 +1,6 @@
 import axios from "axios";
 
- export const getArtist = async(artistId) => {
+export const getArtist = async(artistId) => {
 
   console.log(artistId);
 

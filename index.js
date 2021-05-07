@@ -1,21 +1,22 @@
 import fs from 'fs';
-
-import auth from './auth.service.js';
-import { getArtist } from './artist.service.js';
 import axios from 'axios';
+
+import { getToken } from './auth.service.js';
+import { getArtist } from './artist.service.js';
+
+const seedId = "6eUKZXaKkcviH0Ku9w2n3V"; // Ed Sheeran, most popular on spotify 🤨
 
 try {
   let count = 0;
   const crawled = new Set();
   const written = new Set();
 
-  const token = await auth();
+  const token = await getToken();
 
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   axios.defaults.headers.common['Accept'] = "application/json";
   axios.defaults.headers.common['Content-Type'] = "application/json";
 
-  const seedId = "0OdUWJ0sBjDrqHygGUXeCF";
   const vertices = fs.createWriteStream('./output/vertices.csv', { encoding: 'utf8' });
   const edges = fs.createWriteStream('./output/edges.csv', { encoding: 'utf8' });
 
