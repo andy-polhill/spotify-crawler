@@ -4,7 +4,8 @@ import axios from 'axios';
 import { getToken } from './auth.service.js';
 import { getArtist } from './artist.service.js';
 
-const seedId = "6eUKZXaKkcviH0Ku9w2n3V"; // Ed Sheeran, most popular on spotify 🤨
+const defaultSeedId = "6eUKZXaKkcviH0Ku9w2n3V"; // Ed Sheeran, most popular on spotify 🤨
+const [seedId = defaultSeedId] = process.argv;
 
 try {
   let count = 0;
