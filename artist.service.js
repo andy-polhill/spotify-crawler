@@ -8,8 +8,7 @@ export const getArtist = async(artistId) => {
     const response = await axios.get(`https://api.spotify.com/v1/artists/${artistId}/related-artists`);
 
     return response.data.artists
-      .filter(({ popularity }) => popularity > 50)
-      .map(({ name, id }) => ({ name, id }));
+      .map(({ name, id, popularity }) => ({ name, id, popularity }));
 
     } catch (error) {
 

@@ -28,23 +28,51 @@ try {
     crawled.add(id);
 
     try {
-      const artists = await getArtist(id, token);
       console.log('\ncount: ', count);
-      artists
-        .filter(a => !written.has(a.id))
-        .forEach(a => {
+      const artists = (await getArtist(id, token))
+        .filter(a => !a.id || !written.has(a.id))
+        .filter(({ popularity }) => popularity > 60);
+
+      artists.forEach(a => {
           written.add(a.id);
           vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
           edges.write(`${id}, "${a.id}", related\n`);
         });
         
-      if(count === 10) {
+      if(count === 30000) {
         vertices.end();
         edges.end();
         return;
       }
-    
-      const { id: nextId } = artists.find(({ id }) => !crawled.has(id));
+
+      let nextId;
+
+      /*
+        When there are no popular routes to go down
+        avoid the rabbit holes and find another artist
+        to continue with. There are some interesting
+        rabbit holes 🐰
+      */
+      if(!artists.length) {
+        console.log('no artists!');
+
+        const iterator = written[Symbol.iterator]();
+
+        let result = iterator.next();
+        while (!result.done) {
+          result = iterator.next();
+          if(!crawled.has(result.value)) {
+            console.log(`recommence with ${result.value}`);
+            nextId = result.value;
+            break;
+          }
+        }
+      }
+
+      // TODO this reads a bit backwards as it's the most likely outcome
+      if(!nextId) {
+        nextId = artists.find(({ id }) => !crawled.has(id)).id;
+      }
 
       if(!nextId) {
         return console.log('💥 no next id!');
@@ -52,6 +80,8 @@ try {
 
       recursion(nextId);
     } catch(e) {
+      vertices.end();
+      edges.end();
       console.log(e);
     }
   }
