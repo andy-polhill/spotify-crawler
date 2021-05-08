@@ -1,0 +1,78 @@
+{
+  "artists": [
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/0jnsk9HBra6NMjO2oANoPY"
+      },
+      "followers": {
+        "href": null,
+        "total": 8057333
+      },
+      "genres": [
+        "pop",
+        "pop rap"
+      ],
+      "href": "https://api.spotify.com/v1/artists/0jnsk9HBra6NMjO2oANoPY",
+      "id": "1",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/2d0b5f483c7ed95b7c3c63147c3d38f9366b2c21",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/98f6070f467c5b95e09505aeda1aa5b48d1a133d",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/d1a78628d48a855d51ab7d74b6d78c22ee8a2b63",
+          "width": 160
+        }
+      ],
+      "name": "artist 1",
+      "popularity": 80,
+      "type": "artist",
+      "uri": "spotify:artist:0jnsk9HBra6NMjO2oANoPY"
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/6MF9fzBmfXghAz953czmBC"
+      },
+      "followers": {
+        "href": null,
+        "total": 1928868
+      },
+      "genres": [
+        "dance pop",
+        "edm",
+        "pop",
+        "pop rap"
+      ],
+      "href": "https://api.spotify.com/v1/artists/6MF9fzBmfXghAz953czmBC",
+      "id": "2",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://i.scdn.co/image/dedc6fcfc7ec914af993c783a60a8f34bdcfaa01",
+          "width": 640
+        },
+        {
+          "height": 320,
+          "url": "https://i.scdn.co/image/2c156e614f24740952bd2f216df2ff34f0b285bb",
+          "width": 320
+        },
+        {
+          "height": 160,
+          "url": "https://i.scdn.co/image/f32759120c9bdcecd757c96be04e5e8a3f8f8b8b",
+          "width": 160
+        }
+      ],
+      "name": "artist 2",
+      "popularity": 80,
+      "type": "artist",
+      "uri": "spotify:artist:6MF9fzBmfXghAz953czmBC"
+    }
+  ]
+}

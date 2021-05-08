@@ -1,8 +1,10 @@
 module.exports = {
+    "plugins": ["jest"],
     "parser": "@babel/eslint-parser",
     "env": {
         "es2021": true,
-        "node": true
+        "node": true,
+        "jest/globals": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -10,5 +12,7 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "semi": ["error", "always"],
+        "quotes": ["error", "double"]
     }
 };
