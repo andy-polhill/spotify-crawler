@@ -1,10 +1,10 @@
 const axios = require("axios");
 const querystring = require("querystring");
 
-exports.getToken = async() => {
+exports.getToken = async(id, secret) => {
 
   const encodedToken = Buffer
-    .from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`)
+    .from(`${id}:${secret}`)
     .toString("base64");
 
   const { data } = await axios.post("https://accounts.spotify.com/api/token", 
