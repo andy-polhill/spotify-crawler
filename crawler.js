@@ -1,10 +1,10 @@
-const { getToken } = require("./auth.service");
-const { getArtist } = require("./artist.service");
+import axios from "axios";
+import { createWriteStream } from "fs";
 
-const axios = require("axios");
-const fs = require("fs");
+import { getToken } from "./auth.service.js";
+import { getArtist } from "./artist.service.js";
 
-class Crawler {
+export default class Crawler {
 
   count = 0;
 
@@ -12,8 +12,8 @@ class Crawler {
     this.written = new Set();
     this.crawled = new Set();
 
-    this.vertices = fs.createWriteStream("./output/vertices.csv", { encoding: "utf8" });
-    this.edges = fs.createWriteStream("./output/edges.csv", { encoding: "utf8" });
+    this.vertices = createWriteStream("./output/vertices.csv", { encoding: "utf8" });
+    this.edges = createWriteStream("./output/edges.csv", { encoding: "utf8" });
   }
 
   async start(id) {
@@ -93,5 +93,3 @@ class Crawler {
     this.crawl(nextId);
   }
 }
-
-module.exports = Crawler;

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "plugins": ["jest"],
     "parser": "@babel/eslint-parser",
     "env": {
@@ -13,6 +13,6 @@ module.exports = {
     },
     "rules": {
         "semi": ["error", "always"],
-        "quotes": ["double", 1]
+        "quotes": [1, "double"]
     }
 };
