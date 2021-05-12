@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     "plugins": ["jest"],
     "parser": "@babel/eslint-parser",
     "env": {
