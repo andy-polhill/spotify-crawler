@@ -43,7 +43,6 @@ export default class Crawler {
     while (!result.done) {
       result = iterator.next();
       if(!this.crawled.has(result.value)) {
-        console.log(`recommence with ${result.value}`);
         return result.value;
       }
     }
@@ -51,24 +50,35 @@ export default class Crawler {
 
   async crawl(id) {
     this.count++;
-
-    const artists = (await getArtist(id))
-    .filter(a => !a.id || !this.written.has(a.id))
-    .filter(({ popularity }) => popularity > 60);
-
-    artists.forEach(a => {
-      this.written.add(a.id);
-      this.vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
-      this.edges.write(`${id}, "${a.id}", related\n`);
-    });
-
-    this.crawled.add(id);
-
-    if(this.count === 30000) {
-      this.stop();
-    }
+    this.count % 100 === 0 && console.log(this.count);
 
     let nextId;
+
+    try {
+      const artists = (await getArtist(id))
+      .filter(a => !a.id || !this.written.has(a.id))
+      .filter(({ popularity }) => popularity > 60);
+
+      artists.forEach(a => {
+        this.written.add(a.id);
+        this.vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
+        this.edges.write(`${id}, "${a.id}", related\n`);
+      });
+
+      this.crawled.add(id);
+
+      if (artists.length) {
+        nextId = artists.find(({ id }) => !this.crawled.has(id)).id;
+      }
+
+    } catch(e) {
+      console.log(e);
+    }
+
+    if(this.count === 100000) {
+      console.log("final count reached");
+      this.stop();
+    }
 
     /*
       When there are no popular routes to go down
@@ -76,12 +86,8 @@ export default class Crawler {
       to continue with. There are some interesting
       rabbit holes 🐰
     */
-    if(!artists.length) {
+    if(!nextId) {
       nextId = this.getNextArtist();
-    }
-
-    if(!nextId) { // Find next un crawled artist
-      nextId = artists.find(({ id }) => !this.crawled.has(id)).id;
     }
 
     if(!nextId) {
