@@ -48,6 +48,12 @@ export default class Crawler {
     }
   }
 
+  writeArtist(a, id) {
+    this.written.add(a.id);
+    this.vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
+    this.edges.write(`${id}, "${a.id}", related\n`);
+  }
+
   async crawl(id) {
     this.count++;
     this.count % 100 === 0 && console.log(this.count);
@@ -56,14 +62,10 @@ export default class Crawler {
 
     try {
       const artists = (await getArtist(id))
-      .filter(a => !a.id || !this.written.has(a.id))
-      .filter(({ popularity }) => popularity > 60);
-
-      artists.forEach(a => {
-        this.written.add(a.id);
-        this.vertices.write(`${a.id}, "${a.name}", ${a.popularity}, artist\n`);
-        this.edges.write(`${id}, "${a.id}", related\n`);
-      });
+        .filter(a => !a.id || !this.written.has(a.id))
+        .filter(({ popularity }) => popularity > 50)
+      
+      artists.forEach(a => this.writeArtist(a, id));
 
       this.crawled.add(id);
 

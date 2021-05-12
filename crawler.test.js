@@ -1,11 +1,14 @@
 import { createWriteStream } from "fs";
+import axios from "axios";
 
 import Crawler from "./crawler";
 import { getToken } from "./auth.service.js";
-import axios from "axios";
+import { getArtist } from "./artist.service.js";
+import relatedArtist from "./__fixtures__/related-artist.json";
 
 jest.mock("fs");
 jest.mock("axios");
+jest.mock("./artist.service.js");
 jest.mock("./auth.service.js");
 
 const token = "SPOTIFY_TOKEN";
@@ -20,6 +23,13 @@ describe("crawler", () => {
   beforeEach(() => {
     createWriteStream.mockReturnValue(mockWriteStream);
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+  });
+
 
   describe("constructor", () => {
 
@@ -78,6 +88,35 @@ describe("crawler", () => {
     test("crawling the start id", () => {
       expect(Crawler.prototype.crawl.mock.calls.length).toBe(1);
       expect(Crawler.prototype.crawl.mock.calls[0][0]).toBe(id);
+    });
+  });
+
+  describe("crawl", () => {
+
+    beforeEach(() => {
+      const crawler = new Crawler();
+      jest.spyOn(crawler, "crawl")
+        .mockImplementationOnce(id => {
+          Crawler.prototype.crawl.apply(crawler, [id]);
+        })
+        .mockImplementation(() => {});
+
+      getArtist.mockResolvedValue(relatedArtist.artists);
+      crawler.crawl(id);
+    });
+
+    test("fetching the artist with the specified id", () => {
+      expect(getArtist.mock.calls[0][0]).toEqual(id);
+    });
+
+    test("adding the artist to the edges output", () => {
+      expect(mockWriteStream.write.mock.calls[0][0])
+        .toBe("1, \"artist 1\", 80, artist\n");
+    });
+
+    test("adding the artist to the vertices output", () => {
+      expect(mockWriteStream.write.mock.calls[1][0])
+        .toEqual("123ABC, \"1\", related\n");
     });
   });
 });
