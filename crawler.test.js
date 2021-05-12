@@ -41,7 +41,8 @@ describe("crawler", () => {
   describe("start", () => {
 
     beforeEach(() => {
-      jest.spyOn(Crawler.prototype, "crawl");
+      jest.spyOn(Crawler.prototype, "crawl")
+        .mockImplementation(() => {});
 
       getToken.mockResolvedValue(token);
       (new Crawler()).start(id);
