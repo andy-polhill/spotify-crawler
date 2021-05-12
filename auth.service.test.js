@@ -4,8 +4,8 @@ import { getToken } from "./auth.service";
 jest.mock("axios");
 
 const accessToken = "AAABBBCCC";
-const id = 'SPOTIFY_CLIENT_ID';
-const secret = 'SPOTIFY_CLIENT_SECRET'
+const id = "SPOTIFY_CLIENT_ID";
+const secret = "SPOTIFY_CLIENT_SECRET";
 
 describe("auth.service", () => {
 
@@ -19,9 +19,9 @@ describe("auth.service", () => {
     post.mockResolvedValue({ data: { access_token: accessToken } });
     await getToken(id, secret);
     expect(post.calledOnce);
-    expect(post.mock.calls[0][2].headers['Authorization']).toEqual(`Basic ${Buffer
+    expect(post.mock.calls[0][2].headers["Authorization"]).toEqual(`Basic ${Buffer
       .from(`${id}:${secret}`)
-      .toString("base64")}`)
+      .toString("base64")}`);
   });
 
   test("it returns the access token", async() => {

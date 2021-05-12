@@ -37,7 +37,6 @@ export default class Crawler {
   }
 
   getNextArtist = () => {
-
     const iterator = this.written[Symbol.iterator]();
   
     let result = iterator.next();
@@ -87,7 +86,7 @@ export default class Crawler {
 
     if(!nextId) {
       this.stop();
-      throw new Error('unable to find an ID to crawl 💥');
+      throw new Error("unable to find an ID to crawl 💥");
     }
 
     this.crawl(nextId);
